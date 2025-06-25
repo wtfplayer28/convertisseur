@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Convertisseur de devises</title>
+</head>
+<body style= "text-align: center;font-size: 50px; background: linear-gradient(140deg, rgb(226, 148, 3),white,rgb(0, 117, 0)); height: 800px; width: 1700px;">
+    <h1>Convertisseur de devises</h1>
+
+    <label for="montant">Montant :</label>
+    <input type="number" id="montant" placeholder="Entrez le montant" style="font-size:50px;"><br><br>
+
+    <label for="deviseOrigine">De :</label>
+    <input list="listeDevises" id="deviseOrigine" name="deviseOrigine" placeholder="Devise d'origine" style="font-size:50px;">
+
+    <label for="deviseDestination">À :</label>
+    <input list="listeDevises" id="deviseDestination" name="deviseDestination" placeholder="Devise cible"style="font-size:50px;">
+
+    <datalist id="listeDevises">
+        <option data-valeur="1" value="Euro">
+        <option data-valeur="655.8643" value="Franc CFA">
+        <option data-valeur="1.1615" value="Dollar américain">
+        <option data-valeur="11.9968" value="Cedi Ghanéen">
+        <option data-valeur="0.8526" value="Livre britannique">
+    </datalist>
+
+    <br><br>
+    <button onclick="convertir()" style="font-size:50px;">Convertir</button>
+
+    <h2>Résultat :</h2><h3>
+    <p id="resultat" style="font-size:50px;">--</p></h3>
+    <h6>fait par wtfplayer(prince)</h6>
+
+    <script>
+        function getTaux(devise) {
+            const options = document.getElementById('listeDevises').options;
+            for (let opt of options) {
+                if (opt.value === devise) {
+                    return parseFloat(opt.dataset.valeur);
+                }
+            }
+            return null;
+        }
+
+        function convertir() {
+            const montant = parseFloat(document.getElementById('montant').value);
+            const deviseOrigine = document.getElementById('deviseOrigine').value;
+            const deviseDestination = document.getElementById('deviseDestination').value;
+
+            const tauxOrigine = getTaux(deviseOrigine);
+            const tauxDestination = getTaux(deviseDestination);
+
+            if (isNaN(montant) || !tauxOrigine || !tauxDestination) {
+                document.getElementById('resultat').textContent = "Vérifiez les champs.";
+                return;
+            }
+
+            // Conversion : convertir d'abord en Euro, puis vers la devise cible
+            const montantEnEuro = montant / tauxOrigine;
+            const montantConverti = montantEnEuro * tauxDestination;
+
+            document.getElementById('resultat').textContent = 
+                `${montant} ${deviseOrigine} = ${montantConverti.toFixed(2)} ${deviseDestination}`;
+        }
+    </script>
+</body>
+</html>
